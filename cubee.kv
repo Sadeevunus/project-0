@@ -1,0 +1,327 @@
+#:import CardTransition kivy.uix.screenmanager.CardTransition
+#:import get_color_from_hex kivy.utils.get_color_from_hex
+#:import Factory kivy.factory.Factory
+
+SM:
+    #transition:
+
+
+    MainScreen:
+        id: main
+    Screen3x3:
+        id: three_x_three
+    Screen2x2:
+        id: two_x_two
+    ScreenSignations:
+        id: signations
+
+<MenuHeader>:
+    spacing: "12dp"
+    padding: "4dp"
+    adaptive_height: True
+    font_size: "3dp"
+
+    MDIconButton:
+        icon: "gesture-tap-button"
+        pos_hint: {"center_y": .5}
+
+    MDLabel:
+        text: "Выберите головоломку"
+        adaptive_size: True
+        pos_hint: {"center_y": .5}
+
+<Screen3x3>:
+    md_bg_color: app.theme_cls.bg_dark
+    name: "3x3"
+
+    popup_three:
+    MDScrollView:
+        do_scroll_x: False
+        do_scroll_y: True
+        dscroll_timeout: 20
+        size_hint: 1, .9
+        pos_hint: {"center_x": .5, "center_y": .55}
+
+
+        MDGridLayout:
+            cols: 1
+            size_hint_y: None
+            row_default_height: root.height * 0.1
+            height: self.minimum_height
+            spacing: 36
+            padding: [36, 0]
+
+            MDSeparator:
+
+            MDLabel:
+                canvas.before:
+                    Color:
+                        rgb: (222/255,224/255,226/255)
+                        #get_color_from_hex("#bec2c6")
+                    RoundedRectangle:
+                        size: self.width-30, self.height
+                        pos: self.x-20, self.y
+                        radius: [(10,15),(20,20),(50,40),(20,30)]
+                markup: True
+                # [font=<str>][/font]
+                # [color=#<color>][/color]
+                halign: "left"
+                valign: "top"
+                text: "[font=Arial]Держите куб [b][size=26][color=#36ff26]зеленой[/color][/size][/b] стороной к вам \nи [b][size=26][color=#d52731]красной[/color][/size][/b] стороной вправо[/font]\n[font=times]Цвет стороны = цвету середины стороны[/font]"
+                font_size: 22
+
+            MDRaisedButton:
+                text: 'Настройка сборки'
+                pos_hint: {"center_x": .5, "center_y": .5}
+                size_hint: .6, .1
+                on_release:
+                    #root.manager.current = "3x3solve"
+                    Factory.popup_three().open()
+
+            MDLabel:
+                id: solve_label
+                text: ''
+                font_size: 32
+                pos_hint: {'center_x': 0.5,'center_y':0.4}
+
+
+    MDFloatLayout:
+        orientation: "vertical"
+        size_hint: 1, 0.1
+        padding: [72, 0]
+        spacing: 40
+
+        MDRaisedButton:
+            pos_hint: {"center_x": .5, "center_y": .5}
+            text: '-> На главную <-'
+            font_size: 28
+            size_hint: .6, .05
+            on_release:
+                root.manager.transition.direction="down"
+                root.manager.current = 'main'
+
+<Screen2x2>:
+    name: "2x2"
+
+    popup_two:
+
+    MDCard:
+        elevation: 5
+        orientation: 'vertical'
+        adaptive_height: True
+        radius: 10
+        pos_hint: {"center_x": .5, "center_y": .8}
+        size_hint: 0.9, 0.2
+        md_bg_color: app.theme_cls.bg_darkest
+        padding: 5, 10
+        spacing: 10
+
+
+        MDRaisedButton:
+            text: 'Настройка сборки'
+            pos_hint: {"center_x": .5, "center_y": .5}
+            size_hint: .6, .1
+            on_release:
+                Factory.popup_two().open()
+
+    MDSeparator:
+    MDCard:
+        elevation: 3
+        orientation: 'vertical'
+        adaptive_height: True
+        radius: 15
+        pos_hint: {"center_x": .5, "center_y": .35}
+        size_hint: 0.9, 0.6
+        md_bg_color: app.theme_cls.bg_darkest
+        padding: 5, 10
+        spacing: 10
+
+        MDLabel:
+            id: solve_label
+            text: ''
+            font_size: 32
+            pos_hint: {'center_x': 0.5,'center_y':0.7}
+        MDSeparator:
+
+        MDRectangleFlatButton:
+            text: '-> На главную <-'
+            pos_hint: {'center_x': 0.5,'center_y':0.2}
+            on_release:
+                root.manager.transition.direction="down"
+                root.manager.current = 'main'
+
+
+
+<ScreenSignations>:
+    name: "signations"
+    MDRectangleFlatButton:
+        size_hint: .8, .3
+        pos_hint: {'center_x': 0.5,'center_y':0.5}
+        text: "main"
+        on_release:
+            root.manager.transition.direction="down"
+            app.root.current = 'main'
+
+#<Screen3x3solve>:
+#    name: "3x3solve"
+#    MDIconButton:
+#        icon: "scan"
+#        on_release: root.ids.popup.open()
+#    #popup_3:
+
+
+<popup_three@Popup>:
+    title: "Настройка сборки"
+    size_hint: .85 , .9
+    pos_hint: {"center_x": .5, "center_y": .5}
+    id: popup_3
+    auto_dismiss: False
+    MDBoxLayout:
+        #id: box
+        spacing: 15
+        padding: 10
+        orientation: "vertical"
+        size_hint: 1,1
+
+        Sselection_three:
+            id:selection
+            size_hint: None, None
+            size: root.width-dp(40), root.height*.6
+            #pos_hint: {"center_x": .5, "center_y": .7}
+        MDRectangleFlatButton:
+            text: 'Дальше'
+            size: .6 , .12
+            pos_hint:{"center_x": .5, "center_y": .3}
+            on_release: root.ids.selection.side_create()
+        MDRectangleFlatButton:
+            text: 'Готово'
+            size: .6 , .12
+            pos_hint: {"center_x": .5, "center_y": .15}
+            on_release:
+                app.root.ids.three_x_three.ids.solve_label.text=root.ids.selection.solve()
+                root.dismiss()
+                #print(root.ids.selection.state)
+
+            #root.parent.manager.current="3x3"
+
+<popup_two@Popup>:
+    title: "Настройка сборки"
+    size_hint: .85 , .9
+    pos_hint: {"center_x": .5, "center_y": .5}
+    id: popup_2
+    auto_dismiss: False
+    MDBoxLayout:
+        #id: box
+        spacing: 15
+        padding: 10
+        orientation: "vertical"
+        size_hint: 1,1
+
+        Sselection_two:
+            id:selection
+            size_hint: None, None
+            size: root.width-dp(40), root.height*.6
+            #pos_hint: {"center_x": .5, "center_y": .7}
+        MDRectangleFlatButton:
+            text: 'Дальше'
+            size: .6 , .12
+            pos_hint:{"center_x": .5, "center_y": .3}
+            on_release: root.ids.selection.side_create()
+        MDRectangleFlatButton:
+            text: 'Готово'
+            size: .6 , .12
+            pos_hint: {"center_x": .5, "center_y": .15}
+            on_release:
+                app.root.ids.two_x_two.ids.solve_label.text=root.ids.selection.solve()
+                root.dismiss()
+
+<Sselection_three@sselection3>:
+    id: selection
+<Sselection_two@sselection2>:
+    id: selection
+
+
+
+<MainScreen>:
+    name: "main"
+    id: screen
+
+    MDBottomNavigation:
+        id: bottom
+        show_transition : "out_back"
+        panel_color: app.theme_cls.primary_light   #"lightgray"
+        selected_color_background: app.theme_cls.accent_light   #"#c4ffff"
+        text_color_active: app.theme_cls.primary_dark   #"white"
+
+        MDBottomNavigationItem:
+            name: "screen_solver"
+            text: "Решить скрамбл"
+            icon: "cube-scan"
+
+            MDRaisedButton:
+                text: "Куб 3Х3"
+                halign: "center"
+                pos_hint: {"center_x": .5, "center_y": .7}
+                size_hint: .7,.12
+                on_release:
+                    root.manager.transition.direction="up"
+                    root.manager.transition= CardTransition()
+                    root.manager.current="3x3"
+
+            MDRaisedButton:
+                text: "Куб 2Х2"
+                halign: "center"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                size_hint: .7,.12
+                on_release:
+                    root.manager.transition.direction="up"
+                    root.manager.current="2x2"
+            MDRaisedButton:
+                text: "Обозначения"
+                halign: "center"
+                pos_hint: {"center_x": .5, "center_y": .3}
+                size_hint: .6,.1
+                on_release:
+                    root.manager.transition.direction="up"
+                    root.manager.current="signations"
+
+        MDBottomNavigationItem:
+            name: "screen_algoritms"
+            text: "Алгоритмы"
+            icon: "cube"
+
+            MDRaisedButton:
+                pos_hint: {"center_x": .4, "center_y": .65}
+                size_hint: .6, .2
+                text: "Куб 3Х3"
+                halign: "center"
+                on_release: root.manager.current: "3x3"
+
+            MDRaisedButton:
+                pos_hint: {"center_x": .6, "center_y": .35}
+                size_hint: .6, .2
+                text: "Куб 2Х2"
+                halign: "center"
+                on_release: root.manager.current: "2x2"
+
+        #MDBottomNavigationItem:
+        #    name: "screen_other"
+        #    text: "Прочее"
+        #    icon:"cube-unfolded"
+
+        #    MDRaisedButton:
+        #        id:button_offer
+        #        text: "Предложить свой алгоритм"
+        #        pos_hint: {"center_x": .5, "center_y": .5}
+
+        MDBottomNavigationItem:
+            #name: "screen_settings"
+            text: "Настройки"
+            icon: "settings-helper"
+
+            MDRectangleFlatButton:
+                on_release: app.switch_theme_style()
+                size_hint: .6, .12
+                pos_hint: {"center_x": .5, "center_y": .2}
+                text: "Сменить тему"
+                #font_size: 24
